@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">NotasApp</string>
+    <string name="login_title">Inicia sesión</string>
+    <string name="email">Email</string>
+    <string name="password">Contraseña</string>
+    <string name="login_button">Iniciar sesión</string>
+    <string name="register_button">Registrarse</string>
+</resources>
