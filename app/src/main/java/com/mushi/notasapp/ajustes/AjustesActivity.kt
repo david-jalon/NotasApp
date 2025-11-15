@@ -1,72 +1,53 @@
 package com.mushi.notasapp.ajustes
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.lifecycleScope
-import com.google.android.material.switchmaterial.SwitchMaterial
-import com.mushi.notasapp.R
-import com.mushi.notasapp.data.SettingsDataStore
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
+import androidx.lifecycle.observe
+import com.mushi.notasapp.data.local.SettingsManager
+import com.mushi.notasapp.databinding.ActivityAjustesBinding // Asegúrate de que este nombre es correcto
 
 class AjustesActivity : AppCompatActivity() {
 
-    private lateinit var switchDarkMode: SwitchMaterial
-    private lateinit var settingsDS: SettingsDataStore
+    // Declara la variable para ViewBinding
+    private lateinit var binding: ActivityAjustesBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-
-        // 🔥 Aplicar tema ANTES de cargar la Activity
-        aplicarTemaGuardado()
-
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_ajustes)
-
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
-
-        settingsDS = SettingsDataStore(this)
-        switchDarkMode = findViewById(R.id.switchDarkMode)
-
-        // ⭐ Sincronizar el estado del switch con DataStore
-        lifecycleScope.launch {
-            settingsDS.darkModeFlow.collectLatest { isDark ->
-                switchDarkMode.isChecked = isDark
-            }
-        }
-
-        // ⭐ Cuando el usuario cambia el switch → guardar en DataStore
-        switchDarkMode.setOnCheckedChangeListener { _, isChecked ->
-            lifecycleScope.launch {
-                settingsDS.setDarkMode(isChecked)
-
-                // cambiar tema inmediatamente
-                AppCompatDelegate.setDefaultNightMode(
-                    if (isChecked) AppCompatDelegate.MODE_NIGHT_YES
-                    else AppCompatDelegate.MODE_NIGHT_NO
-                )
-            }
-        }
+    // Inicializa el ViewModel usando 'by viewModels' y nuestro Factory
+    private val ajustesViewModel: AjustesViewModel by viewModels {
+        AjustesViewModelFactory(SettingsManager(this))
     }
 
-    private fun aplicarTemaGuardado() {
-        val ds = SettingsDataStore(this)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // Infla el layout usando ViewBinding y lo establece como el contenido de la actividad
+        binding = ActivityAjustesBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        lifecycleScope.launch {
-            ds.darkModeFlow.collectLatest { isDark ->
-                AppCompatDelegate.setDefaultNightMode(
-                    if (isDark) AppCompatDelegate.MODE_NIGHT_YES
-                    else AppCompatDelegate.MODE_NIGHT_NO
-                )
+        // --- LÓGICA PRINCIPAL ---
+
+        // 1. Observamos los cambios del modo oscuro desde el ViewModel
+        ajustesViewModel.isDarkModeEnabled.observe(this) { isEnabled ->
+            // Este bloque se ejecutará cuando la app inicie y cada vez que el valor cambie.
+
+            // a) Actualizamos la UI para que el switch refleje el estado actual
+            binding.switchDarkMode.isChecked = isEnabled
+
+            // b) Aplicamos el tema (oscuro o claro) a toda la aplicación
+            val mode = if (isEnabled) {
+                AppCompatDelegate.MODE_NIGHT_YES
+            } else {
+                AppCompatDelegate.MODE_NIGHT_NO
             }
+            AppCompatDelegate.setDefaultNightMode(mode)
+        }
+
+        // 2. Configuramos el listener para reaccionar a los clics del usuario en el switch
+        binding.switchDarkMode.setOnCheckedChangeListener { _, isChecked ->
+            // Cuando el usuario pulsa el switch, le decimos al ViewModel que guarde el nuevo estado.
+            // El observador de arriba se encargará de aplicar el cambio visual.
+            ajustesViewModel.setDarkMode(isChecked)
         }
     }
 }
+

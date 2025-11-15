@@ -10,7 +10,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.NotasApp.Day">
+        android:theme="@style/Theme.NotasApp">
         <activity
             android:name=".ajustes.AjustesActivity"
             android:exported="false" />
