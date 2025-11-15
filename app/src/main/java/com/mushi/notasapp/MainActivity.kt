@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
-import com.mushi.notasapp.BlocNotas.NotasActivity
+import com.mushi.notasapp.BlocNotas.NotesActivity
 import com.mushi.notasapp.data.database.AppDatabase
 import com.mushi.notasapp.data.database.entities.User
 import com.mushi.notasapp.databinding.ActivityMainBinding
@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity() {
                     // Si el usuario existe
                     Toast.makeText(this@MainActivity, "Bienvenido $user", Toast.LENGTH_SHORT).show()
 
-                    val intent = Intent(this@MainActivity, NotasActivity::class.java)
+                    val intent = Intent(this@MainActivity, NotesActivity::class.java)
                     intent.putExtra("username", user)
                     startActivity(intent)
                     finish()

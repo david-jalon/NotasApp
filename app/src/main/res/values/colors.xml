@@ -3,8 +3,10 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <!--Mis colores-->
+    <!--Modo dia-->
     <color name="black_background">#ED000000</color>
     <color name="green_text">#61CF5A</color>
     <color name="green_background">#1D211C</color>
+
+    <!--Modo noche-->
 </resources>
