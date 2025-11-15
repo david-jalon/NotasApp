@@ -3,10 +3,41 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <!--Modo dia-->
+    <!--Modo Hacker-->
     <color name="black_background">#ED000000</color>
     <color name="green_text">#61CF5A</color>
     <color name="green_background">#1D211C</color>
 
-    <!--Modo noche-->
+    <!-- Paleta del modo Día -->
+    <color name="day_primary">#2962FF</color>          <!-- Azul -->
+    <color name="day_on_primary">#FFFFFF</color>
+
+    <color name="day_secondary">#03A9F4</color>
+    <color name="day_on_secondary">#000000</color>
+
+    <color name="day_tertiary">#4CAF50</color>
+    <color name="day_on_tertiary">#FFFFFF</color>
+
+    <color name="day_background">#FAFAFA</color>
+    <color name="day_on_background">#111111</color>
+
+    <color name="day_surface">#FFFFFF</color>
+    <color name="day_on_surface">#111111</color>
+
+    <!-- Paleta modo noche -->
+    <color name="night_primary">#82B1FF</color>        <!-- Azul claro -->
+    <color name="night_on_primary">#000000</color>
+
+    <color name="night_secondary">#4DD0E1</color>
+    <color name="night_on_secondary">#000000</color>
+
+    <color name="night_tertiary">#81C784</color>
+    <color name="night_on_tertiary">#000000</color>
+
+    <color name="night_background">#121212</color>
+    <color name="night_on_background">#FFFFFF</color>
+
+    <color name="night_surface">#1E1E1E</color>
+    <color name="night_on_surface">#FFFFFF</color>
+
 </resources>

@@ -9,31 +9,67 @@
     android:padding="16dp"
     tools:context=".BlocNotas.NotesActivity">
 
-    <EditText
-        android:id="@+id/etNewNote"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:hint="@string/note"
-        android:maxLines="1"
-        android:singleLine="true"
-        android:textColor="@color/green_text"
-        android:textColorHint="@color/green_text"
-        android:textSize="12sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="16dp"
+        android:elevation="4dp">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnAddNote"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:text="@string/add_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etNewNote" />
+        <TextView
+            android:id="@+id/tvNotasTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Notas"
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvNotes"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/btnAddNote" />
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <ImageButton
+            android:id="@+id/btnAjustes"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@android:drawable/ic_menu_manage"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Settings" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="16dp">
+
+        <EditText
+            android:id="@+id/etNewNote"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:hint="@string/note"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textSize="12sp"
+            android:layout_marginTop="60dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnAddNote"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:text="@string/add_button"
+            android:layout_gravity="end"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvNotes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/btnAddNote" />
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

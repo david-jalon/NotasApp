@@ -1,5 +1,6 @@
 package com.mushi.notasapp.BlocNotas
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.EditText
 import android.widget.Toast
@@ -11,6 +12,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mushi.notasapp.R
+import com.mushi.notasapp.ajustes.AjustesActivity
 import com.mushi.notasapp.data.database.AppDatabase
 import com.mushi.notasapp.data.database.entities.Note
 import com.mushi.notasapp.databinding.ActivityNotesBinding
@@ -37,6 +39,13 @@ class NotesActivity : AppCompatActivity() {
 
         database = AppDatabase.getDatabase(this)
         username = intent.getStringExtra("USERNAME") ?: ""
+
+
+        //Boton ajustes
+        binding.btnAjustes.setOnClickListener {
+            val intent = Intent(this, AjustesActivity::class.java)
+            startActivity(intent)
+        }
 
         // ReciclerView
         adapter = NoteAdapter(
