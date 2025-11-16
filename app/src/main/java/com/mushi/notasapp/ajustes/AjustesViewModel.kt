@@ -18,6 +18,14 @@ class AjustesViewModel(private val settingsManager: SettingsManager) : ViewModel
             settingsManager.setDarkMode(isEnabled)
         }
     }
+
+    val isRememberUserEnabled: LiveData<Boolean> = settingsManager.rememberUserFlow.asLiveData()
+
+    fun setRememberUser(isEnabled: Boolean) {
+        viewModelScope.launch {
+            settingsManager.setRememberUser(isEnabled)
+        }
+    }
 }
 
 // --- EL FACTORY ---

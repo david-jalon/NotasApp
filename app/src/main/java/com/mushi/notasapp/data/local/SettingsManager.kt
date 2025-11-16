@@ -5,6 +5,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -19,6 +20,9 @@ class SettingsManager(private val context: Context) {
     //    Es buena práctica tenerlas en un objeto companion para que sean estáticas.
     companion object {
         val DARK_MODE_KEY = booleanPreferencesKey("dark_mode_enabled")
+
+        val REMEMBER_USER_KEY = booleanPreferencesKey("remember_user_enabled")
+        val LAST_LOGGED_IN_USER_KEY = stringPreferencesKey("last_logged_in_user")
     }
 
     // 3. Crea una función para GUARDAR el estado del modo oscuro.
@@ -36,6 +40,28 @@ class SettingsManager(private val context: Context) {
         // Si el valor no existe todavía (la primera vez que abres la app),
         // devolvemos 'false' como valor predeterminado.
         preferences[DARK_MODE_KEY] ?: false
+    }
+
+    suspend fun setRememberUser(isEnabled: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[REMEMBER_USER_KEY] = isEnabled
+        }
+    }
+
+    val rememberUserFlow: Flow<Boolean> = context.dataStore.data.map { preferences ->
+        preferences[REMEMBER_USER_KEY] ?: true // Por defecto, estará activado
+    }
+
+    // Función para guardar el nombre del último usuario que inició sesión
+    suspend fun saveLastUser(username: String) {
+        context.dataStore.edit { preferences ->
+            preferences[LAST_LOGGED_IN_USER_KEY] = username
+        }
+    }
+
+    // Flow para leer el último nombre de usuario guardado
+    val lastUserFlow: Flow<String?> = context.dataStore.data.map { preferences ->
+        preferences[LAST_LOGGED_IN_USER_KEY]
     }
 }
     

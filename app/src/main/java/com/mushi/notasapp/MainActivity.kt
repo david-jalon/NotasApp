@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.asFlow
 import androidx.lifecycle.lifecycleScope
 import com.mushi.notasapp.BlocNotas.NotesActivity
 import com.mushi.notasapp.ajustes.AjustesViewModel
@@ -17,6 +18,7 @@ import com.mushi.notasapp.data.database.AppDatabase
 import com.mushi.notasapp.data.database.entities.User
 import com.mushi.notasapp.data.local.SettingsManager
 import com.mushi.notasapp.databinding.ActivityMainBinding
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 
@@ -77,11 +79,37 @@ class MainActivity : AppCompatActivity() {
 
             registrarNuevoUsuario(user, password)
         }
+
+        lifecycleScope.launch {
+            // Leemos si el switch "Recordar Usuario" está activado
+            val rememberUser = ajustesViewModel.isRememberUserEnabled.asFlow().first()
+
+            if (rememberUser) {
+                // Si está activado, leemos el último usuario que inició sesión
+                val lastUser = SettingsManager(this@MainActivity).lastUserFlow.first()
+                // Y lo ponemos en el EditText
+                binding.etUser.setText(lastUser)
+            }
+        }
     }
 
     private fun iniciarSesion(user: String, password: String) {
         lifecycleScope.launch {
             val usuarioEncontrado = database.userDao().buscarUsuario(user, password)
+
+            val rememberUser = SettingsManager(this@MainActivity).rememberUserFlow.first()
+
+            if (usuarioEncontrado != null) {
+                if (rememberUser) {
+                    // Si el login es exitoso Y el switch está activado, guardamos el usuario
+                    SettingsManager(this@MainActivity).saveLastUser(user)
+                }
+            } else {
+                if (rememberUser) {
+                    // Opcional: Si el login falla, podemos borrar el último usuario guardado
+                    SettingsManager(this@MainActivity).saveLastUser("")
+                }
+            }
 
             runOnUiThread {
                 if (usuarioEncontrado != null) {

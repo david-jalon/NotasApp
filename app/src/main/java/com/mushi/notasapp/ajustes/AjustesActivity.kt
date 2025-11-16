@@ -48,6 +48,18 @@ class AjustesActivity : AppCompatActivity() {
             // El observador de arriba se encargará de aplicar el cambio visual.
             ajustesViewModel.setDarkMode(isChecked)
         }
+
+        // 1. Observamos el estado del switch "Recordar Usuario"
+        ajustesViewModel.isRememberUserEnabled.observe(this) { isEnabled ->
+            // Sincronizamos el switch con el valor guardado
+            binding.switchRecordarUsuario.isChecked = isEnabled
+        }
+
+// 2. Configuramos el listener para cuando el usuario lo pulse
+        binding.switchRecordarUsuario.setOnCheckedChangeListener { _, isChecked ->
+            // Notificamos al ViewModel que guarde el nuevo estado
+            ajustesViewModel.setRememberUser(isChecked)
+        }
     }
 }
 
