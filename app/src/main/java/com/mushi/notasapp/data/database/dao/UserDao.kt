@@ -3,6 +3,10 @@ package com.mushi.notasapp.data.database.dao
 import androidx.room.*
 import com.mushi.notasapp.data.database.entities.User
 
+/**
+ * Interfaz de acceso a datos (DAO) para la entidad User.
+ * Esta interfaz define los métodos para interactuar con la base de datos utilizando Room.
+ */
 @Dao
 interface UserDao {
 

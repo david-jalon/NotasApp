@@ -18,6 +18,13 @@ import com.mushi.notasapp.data.database.entities.Note
 import com.mushi.notasapp.databinding.ActivityNotesBinding
 import kotlinx.coroutines.launch
 
+/**
+ * Activity para gestionar las notas del usuario.
+ * Permite:
+ *  - Cargar y mostrar las notas del usuario.
+ *  - Permitir añadir, editar y eliminar notas.
+ *  - Navegar a la pantalla de Ajustes.
+ */
 class NotesActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityNotesBinding
@@ -37,7 +44,9 @@ class NotesActivity : AppCompatActivity() {
             insets
         }
 
+        //Obtenemos la instancia de la base de datos
         database = AppDatabase.getDatabase(this)
+        //Obtenemos el nombre de usuario del intent
         username = intent.getStringExtra("USERNAME") ?: ""
 
 
@@ -54,6 +63,7 @@ class NotesActivity : AppCompatActivity() {
             onDeleteClick = { note -> deleteNote(note) }
         )
 
+        // Configura el RecyclerView
         binding.rvNotes.layoutManager = LinearLayoutManager(this)
         binding.rvNotes.adapter = adapter
 
@@ -66,14 +76,18 @@ class NotesActivity : AppCompatActivity() {
         loadNotes()
     }
 
+    //Añade una nota
     private fun addNote() {
+        // Obtén el texto de la nota
         val text = binding.etNewNote.text.toString().trim()
 
+        // Comprueba si la nota está vacía
         if (text.isEmpty()) {
             Toast.makeText(this, "Nota vacía", Toast.LENGTH_SHORT).show()
             return
         }
 
+        // Inserta la nota en la base de datos
         lifecycleScope.launch {
             val newNote = Note(
                 text = text,
@@ -89,6 +103,7 @@ class NotesActivity : AppCompatActivity() {
         }
     }
 
+    //Carga las notas del usuario
     private fun loadNotes() {
         lifecycleScope.launch {
             val notes = database.noteDao().getUserNotes(username)
@@ -99,23 +114,27 @@ class NotesActivity : AppCompatActivity() {
         }
     }
 
+    //Edita una nota
     private fun editNote(note: Note) {
         val editText = EditText(this)
         editText.setText(note.text)
 
+        // Abre un diálogo para editar la nota
         AlertDialog.Builder(this)
-            .setTitle("Edit Note")
-            .setView(editText)
-            .setPositiveButton("Save") { _, _ ->
+            .setTitle("Editar Nota")
+            .setView(editText) // Muestra el EditText
+            .setPositiveButton("Guardar") { _, _ ->
+                //Cuando pulsas guardar, actualiza la nota
                 val newText = editText.text.toString().trim()
                 if (newText.isNotEmpty()) {
                     lifecycleScope.launch {
+                        // Actualiza la nota en la base de datos
                         val updatedNote = note.copy(text = newText)
                         database.noteDao().updateNote(updatedNote)
 
                         runOnUiThread {
-                            Toast.makeText(this@NotesActivity, "Note updated", Toast.LENGTH_SHORT).show()
-                            loadNotes()
+                            Toast.makeText(this@NotesActivity, "Nota actualizada", Toast.LENGTH_SHORT).show()
+                            loadNotes() // Carga las notas actualizadas
                         }
                     }
                 }
@@ -124,17 +143,19 @@ class NotesActivity : AppCompatActivity() {
             .show()
     }
 
+    //Elimina una nota
     private fun deleteNote(note: Note) {
         AlertDialog.Builder(this)
-            .setTitle("Delete Note")
-            .setMessage("Are you sure you want to delete this note?")
-            .setPositiveButton("Delete") { _, _ ->
+            .setTitle("Borrar Nota")
+            .setMessage("¿Estás seguro de que quieres eliminar esta nota?")
+            .setPositiveButton("Borrar") { _, _ ->
+                //Cuando el usuario pulsa borrar
                 lifecycleScope.launch {
                     database.noteDao().deleteNote(note)
 
                     runOnUiThread {
-                        Toast.makeText(this@NotesActivity, "Note deleted", Toast.LENGTH_SHORT).show()
-                        loadNotes()
+                        Toast.makeText(this@NotesActivity, "Nota Eliminada", Toast.LENGTH_SHORT).show()
+                        loadNotes() // Carga las notas actualizadas
                     }
                 }
             }

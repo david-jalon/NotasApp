@@ -9,16 +9,25 @@ import com.mushi.notasapp.data.database.dao.UserDao
 import com.mushi.notasapp.data.database.entities.Note
 import com.mushi.notasapp.data.database.entities.User
 
+/**
+ * Clase principal de la base de datos de Room
+ *
+ * Esta clase es el punto de acceso a la base de datos de Room
+ */
 @Database(entities = [User::class, Note::class], version = 5, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
+    //Metodos para acceder a los DAO
     abstract fun userDao(): UserDao
     abstract fun noteDao(): NoteDao
 
+    //Singleton para obtener la instancia de la base de datos
+    //Si ya existe una instancia, la devuelve, si no, la crea
     companion object {
         @Volatile
         private var INSTANCE: AppDatabase? = null
 
+        //Metodo para obtener la instancia de la base de datos
         fun getDatabase(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
